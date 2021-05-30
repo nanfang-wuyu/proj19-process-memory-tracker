@@ -166,31 +166,31 @@ vector<thread> thread_top(vector<thread> list, int num){
     return list;
 }
 
-void show_allocation(vector<allocation_info> allocation_list){
-    cout << "TID " << "Address " << "Leak Size " << "Stacktrace " << endl;
-    for (size_t i = 0; i < allocation_list.size(); i++)
-    {
-        /* code */
-        cout << allocation_list[i].get_thread_id()<< " " << allocation_list[i].get_address() << " " << allocation_list[i].get_size() << " Bytes ";
-        vector<string> stacktrace = allocation_list[i].get_stacktrace();
-        cout<< "("<<stacktrace.size()<<") : ";
-        for (size_t j = 0; j < stacktrace.size(); j++)
-        {
-            /* code */
-            cout<<stacktrace[j]<<" ";
-        }
-        cout<<endl;
-    }
-}
+// void show_allocation(vector<allocation_info> allocation_list){
+//     cout << "TID " << "Address " << "Leak Size " << "Stacktrace " << endl;
+//     for (size_t i = 0; i < allocation_list.size(); i++)
+//     {
+//         /* code */
+//         cout << allocation_list[i].get_thread_id()<< " " << allocation_list[i].get_address() << " " << allocation_list[i].get_size() << " Bytes ";
+//         vector<string> stacktrace = allocation_list[i].get_stacktrace();
+//         cout<< "("<<stacktrace.size()<<") : ";
+//         for (size_t j = 0; j < stacktrace.size(); j++)
+//         {
+//             /* code */
+//             cout<<stacktrace[j]<<" ";
+//         }
+//         cout<<endl;
+//     }
+// }
 
-void show_thread(vector<thread> thread_list){
-    cout << "TID " << "size " << "num " << endl;
-    for (size_t i = 0; i < thread_list.size(); i++)
-    {
-        /* code */
-        cout << thread_list[i].thread_id << " " << thread_list[i].total_leak_size << " " << thread_list[i].leak_num << endl;
-    }
-}
+// void show_thread(vector<thread> thread_list){
+//     cout << "TID " << "size " << "num " << endl;
+//     for (size_t i = 0; i < thread_list.size(); i++)
+//     {
+//         /* code */
+//         cout << thread_list[i].thread_id << " " << thread_list[i].total_leak_size << " " << thread_list[i].leak_num << endl;
+//     }
+// }
 
 void save_allocation(vector<allocation_info> list, string path){
     ofstream file(path);
@@ -216,33 +216,33 @@ void save_thread(vector<thread> list, string path){
     }
 }
 
-int main(){
-    vector<allocation_info> allocation_list;
-    vector<thread> thread_list;
-    int num = 5;
-    for (size_t i = 0; i < num; i++)
-    {
-        /* code */
+// int main(){
+//     vector<allocation_info> allocation_list;
+//     vector<thread> thread_list;
+//     int num = 5;
+//     for (size_t i = 0; i < num; i++)
+//     {
+//         /* code */
         
-        void * address;
+//         void * address;
         
-        size_t size = (i+1)*4;
-        char * s[] = {"1234", "5678", "0000"};
-        char ** stacktrace = s;
-        size_t depth = 3;
-        pthread_t thread_id = i%3;
+//         size_t size = (i+1)*4;
+//         char * s[] = {"1234", "5678", "0000"};
+//         char ** stacktrace = s;
+//         size_t depth = 3;
+//         pthread_t thread_id = i%3;
         
-        allocation_info a(address, size, stacktrace, depth, thread_id);
+//         allocation_info a(address, size, stacktrace, depth, thread_id);
 
-        string order = "tid";
-        bool direction = true;
-        // allocation_list.push_back(a);
-        allocation_list = allocation_add(allocation_list, a, order, direction);
-        thread_list = thread_add(thread_list, a, order, direction);
-    }
-    show_allocation(allocation_list);
-    show_thread(thread_list);
-    save_allocation(allocation_list, "/home/sakura/project/allocation.csv");
-    save_thread(thread_list, "/home/sakura/project/threads.csv");
-    return 0;
-}
+//         string order = "tid";
+//         bool direction = true;
+//         // allocation_list.push_back(a);
+//         allocation_list = allocation_add(allocation_list, a, order, direction);
+//         thread_list = thread_add(thread_list, a, order, direction);
+//     }
+//     show_allocation(allocation_list);
+//     show_thread(thread_list);
+//     save_allocation(allocation_list, "/home/sakura/project/allocation.csv");
+//     save_thread(thread_list, "/home/sakura/project/threads.csv");
+//     return 0;
+// }

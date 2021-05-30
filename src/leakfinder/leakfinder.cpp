@@ -11,9 +11,28 @@
 #include <dlfcn.h>
 
 #include "allocation_info.hpp"
-// #include "./memoryFile/allocation_func.cpp"
+#include "allocation_func.cpp"
 
 //using namespace bornander::memory;
+
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+
 using namespace std;
 
 static void compile_allocation() __attribute__((destructor));
@@ -21,7 +40,7 @@ static pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static size_t allocation_count = 0;
 static vector<allocation_info> allocation_list;
-// static vector<thread> thread_list;
+static vector<thread> thread_list;
 
 static const size_t max_frame_depth = 128;
 static bool isExternalSource = true;
@@ -29,6 +48,38 @@ static void* (*sys_malloc)(size_t) = 0;
 static void (*sys_free)(void*) = 0;
 static void mutex_protect_start();
 static void mutex_protect_end();
+// void show_allocation(vector<allocation_info> allocation_list);
+
+void show_thread(){
+    cout << BOLDMAGENTA << setw(25) << "TID " << setw(15) << "size " << setw(5) <<"num" << RESET << endl;
+    // cout << thread_list.size() << endl;
+    for (size_t i = 0; i < thread_list.size(); i++)
+    {
+        /* code */
+        cout << setw(25) << thread_list[i].thread_id << setw(9) << thread_list[i].total_leak_size << " Bytes" << setw(5) << thread_list[i].leak_num << endl;
+    }
+}
+
+void show_allocation(){
+    cout << BOLDMAGENTA << setw(25) << "TID" << setw(25) << "Address" << setw(15) << "Leak Size" << setw(5) << "" << "Stacktrace" << RESET << endl;
+    for (size_t i = 0; i < allocation_list.size(); i++)
+    {
+        /* code */
+        cout << setw(25) << allocation_list[i].get_thread_id() << setw(25) << allocation_list[i].get_address() << setw(9) << allocation_list[i].get_size() << " Bytes" << setw(5) << "" << flush;
+        vector<string> stacktrace = allocation_list[i].get_stacktrace();
+        for (size_t j = 0; j < stacktrace.size(); j++)
+        {
+            /* code */
+            if (j == 0) {
+                cout<< stacktrace[j]<<"\n"<<flush;
+                continue;
+            }
+            cout<< setw(70) << "" << stacktrace[j]<<"\n"<<flush;
+        }
+        cout<<endl<<endl;
+    }
+    
+}
 
 static void initialize_functions(void)
 {
@@ -110,28 +161,48 @@ static void mutex_protect_end(){
 void compile_allocation()
 {
     isExternalSource = false;
+    ifstream file("/home/sakura/project/mode.txt");
+    string mode;
+    file >> mode;
+    file.close();
     if (allocation_list.empty())
     {
         cout << "leakfinder found no leaks, not one of the " << allocation_count;
-        cout << " allocations was not released." << endl;
+        cout << "allocations was not released." << endl;
     }
     else
     {
         cout << "leakfinder detected that " << allocation_list.size();
         cout << " out of " << allocation_count << " allocations was not released." << endl;
+
+        vector<allocation_info> tmp;
+        
         for (int i = 0; i < allocation_list.size(); ++i)
         {
             allocation_info allocation = allocation_list[i];
-            cout << "Leak " << (i+1) << "@0x" << hex << allocation.get_thread_id() << dec;
-            cout << "; leaked " << allocation.get_size() << " bytes at position 0x";
-            cout << hex << allocation.get_address() << dec << endl;
+            // cout << "Leak " << (i+1) << "@0x" << hex << allocation.get_thread_id() << dec;
+            // cout << "; leaked " << allocation.get_size() << " bytes at position 0x";
+            // cout << hex << allocation.get_address() << dec << endl;
 
             vector<string> stacktrace = allocation.get_stacktrace();
-            for (int j = 0; j < stacktrace.size(); ++j)
-            {
-                cout << "\t" << stacktrace[j] << endl;
-            }
-            // allocation_add(allocation_list, allocation, "");
+            // for (int j = 0; j < stacktrace.size(); ++j)
+            // {
+                // cout << "\t" << stacktrace[j] << endl;
+            // }
+            tmp = allocation_add(allocation_list, allocation, mode, true);
+            thread_list = thread_add(thread_list, allocation, mode, true);
         }
+        allocation_list = tmp;
     }
+    
+    cout << "\033c" << endl;
+    show_thread();
+    cout << BOLDGREEN << setfill('_') << setw(72) << RESET << endl;
+    cout << setfill(' ') << endl;
+    // cout << "" << endl;
+    show_allocation();
+    save_allocation(allocation_list, "/home/sakura/project/allocation.csv");
+    save_thread(thread_list, "/home/sakura/project/thread.csv");
+    // cout << mode <<endl;
+    
 }

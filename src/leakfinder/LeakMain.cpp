@@ -22,8 +22,8 @@ int main(){
 //    system_cmd(ls_);
     system_cmd(make_clean_);
     system_cmd(make_);
-    sleep(5);
-    system_cmd(export_);
+    // sleep(5);
+    // system_cmd(export_);
 //    system_cmd(terminal_);
 
 }

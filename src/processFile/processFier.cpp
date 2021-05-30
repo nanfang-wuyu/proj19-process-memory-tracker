@@ -273,7 +273,7 @@ int main() {
 void user_call() {
     while (true) {
         char mode;
-        cout << "Input [a] or [b] or [c]:\n[a]:\tspecific\n[b]:\tsorted\n[c]:\tfind the top N memory cosumed PID"
+        cout << "Input [a] or [b] or [c]:\n[a]:\tspecific\n[b]:\tsorted\n[c]:\tfind the top N memory cosumed TID"
              << endl;
         cin >> mode;
         cout << GREEN << "Your input is " << RESET << mode << endl;
@@ -290,7 +290,7 @@ void user_call() {
                 result = process_specific(origin, tid);
                 cout << "\033c" << endl;
                 cout << BOLDWHITE << "Specific mode on TID " << tid << RESET << endl;
-                cout << BOLDMAGENTA << setw(15) << "PID" << setw(15) << "MEM" << RESET << endl;
+                cout << BOLDMAGENTA << setw(15) << "TID" << setw(15) << "MEM" << RESET << endl;
                 for (int i = 0; i < result.size(); ++i) {
                     cout << setw(15) << result[i].pid << setw(15) << result[i].memory << endl;
                 }
@@ -301,7 +301,7 @@ void user_call() {
             /* code */
             char order;
             cout
-                    << "Enter sorted mode. Pls select the order:\n[a]:\tAscend PID\n[b]:\tDescend PID\n[c]:\tAscend memory consuming\n[d]:\tDescend memory consuming"
+                    << "Enter sorted mode. Pls select the order:\n[a]:\tAscend TID\n[b]:\tDescend TID\n[c]:\tAscend memory consuming\n[d]:\tDescend memory consuming"
                     << endl;
             cin >> order;
             cout << GREEN << "Your input is " << RESET << order << endl;
@@ -313,7 +313,7 @@ void user_call() {
                         result = process_sort(origin, "pid", false);
                         cout << "\033c" << endl;
                         cout << BOLDWHITE << "Ascend TID mode" << RESET << endl;
-                        cout << BOLDMAGENTA << setw(15) << "PID" << setw(15) << "MEM" << RESET << endl;
+                        cout << BOLDMAGENTA << setw(15) << "TID" << setw(15) << "MEM" << RESET << endl;
                         for (int i = 0; i < result.size(); ++i) {
                             cout << setw(15) << result[i].pid << setw(15) << result[i].memory << endl;
                         }
@@ -327,7 +327,7 @@ void user_call() {
                         result = process_sort(origin, "pid", true);
                         cout << "\033c" << endl;
                         cout << BOLDWHITE << "Descend TID mode" << RESET << endl;
-                        cout << BOLDMAGENTA << setw(15) << "PID" << setw(15) << "MEM" << RESET << endl;
+                        cout << BOLDMAGENTA << setw(15) << "TID" << setw(15) << "MEM" << RESET << endl;
                         for (int i = 0; i < result.size(); ++i) {
                             cout << setw(15) << result[i].pid << setw(15) << result[i].memory << endl;
                         }
@@ -341,7 +341,7 @@ void user_call() {
                         result = process_sort(origin, "memory", false);
                         cout << "\033c" << endl;
                         cout << BOLDWHITE << "Ascend memory consuming mode" << RESET << endl;
-                        cout << BOLDMAGENTA << setw(15) << "PID" << setw(15) << "MEM" << RESET << endl;
+                        cout << BOLDMAGENTA << setw(15) << "TID" << setw(15) << "MEM" << RESET << endl;
                         for (int i = 0; i < result.size(); ++i) {
                             cout << setw(15) << result[i].pid << setw(15) << result[i].memory << endl;
                         }
@@ -355,7 +355,7 @@ void user_call() {
                         result = process_sort(origin, "memory", true);
                         cout << "\033c" << endl;
                         cout << BOLDWHITE << "Descend memory consuming mode" << RESET << endl;
-                        cout << BOLDMAGENTA << setw(15) << "PID" << setw(15) << "MEM" << RESET << endl;
+                        cout << BOLDMAGENTA << setw(15) << "TID" << setw(15) << "MEM" << RESET << endl;
                         for (int i = 0; i < result.size(); ++i) {
                             cout << setw(15) << result[i].pid << setw(15) << result[i].memory << endl;
                         }

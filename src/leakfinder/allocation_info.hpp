@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
+#include <fstream>
 
 #include <pthread.h>
 using namespace std;
